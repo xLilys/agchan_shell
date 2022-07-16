@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <string.h>
 
 int call(char **argv){
         //pipeでつなぐやつをやる
@@ -31,16 +32,19 @@ int call(char **argv){
 
         pid_t pid;
         pid = fork();
+
+        int ret = -1;
+
         if(pid<0){
                 fprintf(stderr,"fork(2) failed\n");
                 free(pipe);
-                return 1;
+                ret = 1;
         }
         if(pid == 0){
                 execvp(argv[0],argv);
                 perror(argv[0]);
                 free(pipe);
-                return 99;
+                ret = 99;
         }else{
                 int status;
                 waitpid(pid,&status,0);
@@ -52,7 +56,11 @@ int call(char **argv){
                 }else{
                         fprintf(stderr,"abnormal exit\n");
                 }
+                ret = 0;
         }
+
         
+        for(int i=0;i<pipes;i++)free(pipe[i]);
         free(pipe);
+        return 0;
 }
