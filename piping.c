@@ -12,7 +12,11 @@ enum pipe_rw{
 };
 
 
-int piping(char **argv){
+int piping(char **argv,char **output){
+    //親と子を繋ぐパイプを作成
+    int ejectpipe[2];
+    pipe(ejectpipe);
+
     //パイプの必要数の検出と出現位置の記録
     int pipes = 0;
     int pc = DEFAULT_MAXPIPES;
@@ -32,9 +36,24 @@ int piping(char **argv){
     //for(int i=0;i<pipes;i++)fprintf(stderr,"%d\n",pipe_strpos[i]);
 
     if(pipes == 0){
+        /*
         if(!waitchild(call(argv))){
             free(pipe_strpos);
             return -1;
+        */
+        pid_t pid = fork();
+        if(pid < 0){
+            fprintf(stderr,"fork(2) failed.\n");
+        }else if(pid == 0){
+            //子
+            //パイプをつなぐ
+            dup2(ejectpipe[1],1);
+
+            close(ejectpipe[0]);
+            close(ejectpipe[1]);
+
+            execvp(argv[0],argv);
+            exit(0);
         }
     }else{
         //必要なパイプの数分パイプを作成
@@ -81,6 +100,12 @@ int piping(char **argv){
                     close(pipe_ins[pipes-1][0]);
                     close(pipe_ins[pipes-1][1]);
 
+                    //親プロセスへのパイプに標準出力を繋げる
+                    dup2(ejectpipe[1],1);
+
+                    //閉じる
+                    close(ejectpipe[0]);
+                    close(ejectpipe[1]);
 
                 }else{
                     //途中のコマンドはパイプを前も後ろも繋げる
@@ -117,10 +142,16 @@ int piping(char **argv){
         }
 
 
+
         free(pipe_strpos);
         for(int i=0;i<pipes;i++)free(pipe_ins[i]);
         free(pipe_ins);
     }
+
+    close(ejectpipe[0]);
+    close(ejectpipe[1]);
+
+    //で、どうすんの？これ
 
     return 0;
 }

@@ -23,7 +23,8 @@ int main(int argc,int *argv[]){
 				fprintf(stderr,"No such directory.\n");
 			}
 		}else{
-			piping(elements);
+			char **output;
+			piping(elements,output);
 		}
 
 

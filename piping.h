@@ -3,6 +3,6 @@
 
 #define DEFAULT_MAXPIPES 10
 
-int piping(char **argv);
+int piping(char **argv,char **output);
 
 #endif
