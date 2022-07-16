@@ -1,8 +1,10 @@
 make --dry-run --always-make --keep-going --print-directory
-make: Entering directory '/home/yuuki/programs/C/ash'
+make: Entering directory '/home/yuuki/programs/C/agchan_shell'
 gcc -c main.c
 gcc -c ui.c
 gcc -c calling.c
-gcc -Wall -O2 -o run main.o ui.o calling.o
-make: Leaving directory '/home/yuuki/programs/C/ash'
+gcc -c piping.c
+gcc -Wall -O2 -o run main.o ui.o calling.o piping.o
+rm *.o
+make: Leaving directory '/home/yuuki/programs/C/agchan_shell'
  

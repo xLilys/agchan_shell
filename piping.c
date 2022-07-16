@@ -1,31 +1,43 @@
 #include "piping.h"
+#include "calling.h"
 
 #include <unistd.h>
-#include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 int piping(char **argv){
     //pipeでつなぐやつをやる
     //必要数を検出
     int pipes = 0;
-    int *pipe_pos = (int*)malloc(DEFAULT_MAXPIPES * sizeof(int));
     int pc = DEFAULT_MAXPIPES;
-    
+    int *pipe_strpos = (int*)malloc(pc * sizeof(int));
+
     for(int i=0;i<argv[i] != NULL;i++){
         if(strcmp(argv[i],"|") == 0){
             argv[i] = NULL;
             if(pipes > pc){
                 pc += DEFAULT_MAXPIPES;
-                pipe_pos = realloc(pipe_pos,pc);
+                pipe_strpos = realloc(pipe_strpos,pc);
             }
-            pipe_pos[pipes++] = i;
+            pipe_strpos[pipes++] = i;
         }
     }
+    
+
+
+    //必要なパイプの数分パイプを作成
     int **pipe_ins = (int**)malloc(pipes * sizeof(int));
     for(int i=0;i<pipes;i++){
         pipe_ins[i] = (int*)malloc(sizeof(int) * 2);
     }
 
 
+    free(pipe_strpos);
+    for(int i=0;i<pipes;i++)free(pipe_ins[i]);
+    free(pipe_ins);
+
+    return 0;
 }
 

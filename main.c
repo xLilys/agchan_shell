@@ -4,7 +4,7 @@
 
 //my headers
 #include "ui.h"
-#include "calling.h"
+#include "piping.h"
 
 int main(int argc,int *argv[]){
 
@@ -23,6 +23,7 @@ int main(int argc,int *argv[]){
 			}
 		}else{
 			call(elements);
+			piping(elements);
 		}
 
 
