@@ -1,0 +1,9 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/home/yuuki/programs/C/ash'
+gcc -c main.c
+gcc -c ui.c
+gcc -c calling.c
+gcc -c pipe.c
+gcc -Wall -O2 -o run main.o ui.o calling.o pipe.o
+make: Leaving directory '/home/yuuki/programs/C/ash'
+ 
