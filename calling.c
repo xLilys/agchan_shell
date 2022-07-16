@@ -10,20 +10,22 @@ int call(char **argv){
         //pipeでつなぐやつをやる
         //必要数を検出
         int pipes = 0;
-        int *pipe = (int*)malloc(DEFAULT_MAXPIPES * sizeof(int));
+        int *pipe_pos = (int*)malloc(DEFAULT_MAXPIPES * sizeof(int));
         int pc = DEFAULT_MAXPIPES;
         for(int i=0;i<argv[i] != NULL;i++){
                 if(strcmp(argv[i],"|") == 0){
                         argv[i] = NULL;
                         if(pipes > pc){
                                 pc += DEFAULT_MAXPIPES;
-                                pipe = realloc(pipe,pc);
+                                pipe_pos = realloc(pipe_pos,pc);
                         }
-                        pipe[pipes++] = i;
+                        pipe_pos[pipes++] = i;
                 }
         }
-        for(int i=0;i<pc;i++){
-                fprintf(stderr,"%d ",pipe[i]);
+
+        int **pipe = (int**)malloc(pipes * sizeof(int));
+        for(int i=0;i<pipes;i++){
+                pipe[i] = (int*)malloc(sizeof(int) * 2);
         }
 
 
