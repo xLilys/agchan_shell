@@ -8,3 +8,5 @@ calling.o:calling.c
 	gcc -c calling.c
 pipe.o:pipe.c
 	gcc -c pipe.c
+clean:
+	rm *.o
