@@ -1,11 +1,6 @@
 #include "calling.h"
 
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-
-int call(char **argv){
+pid_t call(char **argv){
         int ret = -1;
         pid_t pid = fork();
 
@@ -13,24 +8,26 @@ int call(char **argv){
         if(pid < 0){
                 //生成失敗
                 fprintf(stderr,"fork(2) failed.\n");
-                ret = 1;
         }
         if(pid == 0){
                 //子プロセス
                 execvp(argv[0],argv);
                 perror(argv[0]);
-                ret = 99;
-        }else{
-                //親プロセス
-                int status;
-                waitpid(pid,&status,0);//wait
-                 if(WIFEXITED(status)){
-                }else if(WIFSIGNALED(status)){
-                }else{
-                        fprintf(stderr,"abnormal exit\n");
-                }
-                ret = 0;
         }
-        return ret;
+        return pid;
 }
 
+
+int waitchild(pid_t pid){
+        //親プロセス
+        int status;
+        waitpid(pid,&status,0);//wait
+        if(WIFEXITED(status)){
+        }else if(WIFSIGNALED(status)){
+                return 1;
+        }else{
+                fprintf(stderr,"abnormal exit\n");
+                return -1;
+        }
+        return 0;
+}

@@ -8,12 +8,10 @@
 
 
 int piping(char **argv){
-    //pipeでつなぐやつをやる
-    //必要数を検出
+    //パイプの必要数の検出と出現位置の記録
     int pipes = 0;
     int pc = DEFAULT_MAXPIPES;
     int *pipe_strpos = (int*)malloc(pc * sizeof(int));
-
     for(int i=0;i<argv[i] != NULL;i++){
         if(strcmp(argv[i],"|") == 0){
             argv[i] = NULL;
@@ -26,13 +24,15 @@ int piping(char **argv){
     }
     
     if(pipes == 0){
-        call(argv);
+        waitchild(call(argv));
     }else{
         //必要なパイプの数分パイプを作成
         int **pipe_ins = (int**)malloc(pipes * sizeof(int));
         for(int i=0;i<pipes;i++){
             pipe_ins[i] = (int*)malloc(sizeof(int) * 2);
         }
+
+
 
 
         free(pipe_strpos);
