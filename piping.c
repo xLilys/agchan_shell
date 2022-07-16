@@ -12,10 +12,12 @@ enum pipe_rw{
 };
 
 
-int piping(char **argv,char **output){
-    //親と子を繋ぐパイプを作成
+int piping(char **argv,char **output,char t){
     int ejectpipe[2];
-    pipe(ejectpipe);
+    if(t){
+        //親と子を繋ぐパイプを作成
+        pipe(ejectpipe);
+    }
 
     //パイプの必要数の検出と出現位置の記録
     int pipes = 0;
@@ -43,17 +45,21 @@ int piping(char **argv,char **output){
         */
         pid_t pid = fork();
         if(pid < 0){
-            fprintf(stderr,"fork(2) failed.\n");
+            fprintf(stderr,"%s","fork(2) failed.\n");
         }else if(pid == 0){
             //子
-            //パイプをつなぐ
-            dup2(ejectpipe[1],1);
+            if(t){
+                //パイプをつなぐ
+                dup2(ejectpipe[1],1);
 
-            close(ejectpipe[0]);
-            close(ejectpipe[1]);
+                close(ejectpipe[0]);
+                close(ejectpipe[1]);
+            }
 
             execvp(argv[0],argv);
             exit(0);
+        }else{
+            waitchild(pid);
         }
     }else{
         //必要なパイプの数分パイプを作成
@@ -100,12 +106,14 @@ int piping(char **argv,char **output){
                     close(pipe_ins[pipes-1][0]);
                     close(pipe_ins[pipes-1][1]);
 
-                    //親プロセスへのパイプに標準出力を繋げる
-                    dup2(ejectpipe[1],1);
+                    if(t){
+                        //親プロセスへのパイプに標準出力を繋げる
+                        dup2(ejectpipe[1],1);
 
-                    //閉じる
-                    close(ejectpipe[0]);
-                    close(ejectpipe[1]);
+                        //閉じる
+                        close(ejectpipe[0]);
+                        close(ejectpipe[1]);
+                    }
 
                 }else{
                     //途中のコマンドはパイプを前も後ろも繋げる
@@ -148,10 +156,23 @@ int piping(char **argv,char **output){
         free(pipe_ins);
     }
 
-    close(ejectpipe[0]);
-    close(ejectpipe[1]);
+    if(t){
+        int bufsize = OUTPUT_BUFSIZE * sizeof(char);
+        char *out = (char*)malloc(bufsize);
 
-    //で、どうすんの？これ
+        int res = read(ejectpipe[0],out,bufsize);
+
+        while(!(res < bufsize)){
+            bufsize += OUTPUT_BUFSIZE;
+            out = realloc(out,bufsize);
+            res = read(ejectpipe[0],out,bufsize);
+        }
+
+        fprintf(stderr,"%s",out);
+
+        close(ejectpipe[0]);
+        close(ejectpipe[1]);
+    }
 
     return 0;
 }

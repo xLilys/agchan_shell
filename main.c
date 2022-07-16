@@ -24,7 +24,7 @@ int main(int argc,int *argv[]){
 			}
 		}else{
 			char **output;
-			piping(elements,output);
+			piping(elements,output,0);
 		}
 
 
