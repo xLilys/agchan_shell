@@ -6,12 +6,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+enum pipe_rw{
+    pipe_read,
+    pipe_write
+};
+
 
 int piping(char **argv){
     //パイプの必要数の検出と出現位置の記録
     int pipes = 0;
     int pc = DEFAULT_MAXPIPES;
-    int *pipe_strpos = (int*)malloc(pc * sizeof(int));
+    unsigned int *pipe_strpos = (int*)malloc(pc * sizeof(int));
     for(int i=0;argv[i] != NULL;i++){
         if(strcmp(argv[i],"|") == 0){
             argv[i] = NULL;
@@ -44,8 +49,8 @@ int piping(char **argv){
         //コマンドをforkして実行
         for(int i=0;i<pipes + 1;i++){
             //forkする前に最後の一回以外でパイプを作成
-            if(i == pipes){
-                pipe(pipe_ins[i-1]);
+            if(i != pipes){
+                pipe(pipe_ins[i]);
             }
 
             //パイプの個数+1個分(実行する数execのぶん)forkする まだ実行しない
@@ -110,7 +115,7 @@ int piping(char **argv){
         for(int i=0;i<pipes + 1;i++){
             waitchild(child_pids[i]);
         }
-        
+
 
         free(pipe_strpos);
         for(int i=0;i<pipes;i++)free(pipe_ins[i]);
