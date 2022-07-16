@@ -10,9 +10,10 @@ pid_t call(char **argv){
                 fprintf(stderr,"fork(2) failed.\n");
         }
         if(pid == 0){
-                //子プロセス
+                //子プロセス実行
                 execvp(argv[0],argv);
                 perror(argv[0]);
+                exit(99);
         }
         return pid;
 }

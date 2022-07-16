@@ -12,7 +12,7 @@ int piping(char **argv){
     int pipes = 0;
     int pc = DEFAULT_MAXPIPES;
     int *pipe_strpos = (int*)malloc(pc * sizeof(int));
-    for(int i=0;i<argv[i] != NULL;i++){
+    for(int i=0;argv[i] != NULL;i++){
         if(strcmp(argv[i],"|") == 0){
             argv[i] = NULL;
             if(pipes > pc){
@@ -33,6 +33,66 @@ int piping(char **argv){
         int **pipe_ins = (int**)malloc(pipes * sizeof(int));
         for(int i=0;i<pipes;i++){
             pipe_ins[i] = (int*)malloc(sizeof(int) * 2);
+        }
+
+        for(int i=0;i<pipes + 1;i++){
+            //forkする前に最後の一回以外でパイプを作成
+            if(i == pipes)pipe(pipe_ins[i-1]);
+
+            //パイプの個数+1個分(実行する数execのぶん)forkする まだ実行しない
+            pid_t pid = fork();
+            if(pid < 0){
+                //例外処理
+                fprintf(stderr,"fork(2) failed.\n");
+                break;//例外が起きたらループを抜ける
+
+            }else if(pid == 0){
+                //子プロセス
+                if(i == 0){
+                    //初回のコマンドは標準出力を次のパイプの入口にだけ繋げる
+                    dup2(pipe_ins[0][1],1);
+
+                    //閉じる
+                    close(pipe_ins[0][0]);
+                    close(pipe_ins[0][1]);
+
+
+                }else if(i == pipes){
+                    //最後のコマンドは標準入力を前のパイプの出口にだけ繋げる
+                    dup2(pipe_ins[pipes-1][0],0);
+                    
+                    //閉じる
+                    close(pipe_ins[pipes-1][0]);
+                    close(pipe_ins[pipes-1][1]);
+
+
+                }else{
+                    //途中のコマンドはパイプを前も後ろも繋げる
+                    //後
+                    dup2(pipe_ins[i-1][0],0);
+                    close(pipe_ins[i-1][0]);
+                    close(pipe_ins[i-1][1]);
+                    //前
+                    dup2(pipe_ins[i][1],1);
+                    close(pipe_ins[i][0]);
+                    close(pipe_ins[i][1]);
+                }
+
+                //実行
+                if(i == 0){
+                    //初回は普通に実行
+                    execvp(argv[0],argv);
+                    exit(0);
+                }else{
+                    int pos = pipe_strpos[i - 1] + 1;
+                    execvp(argv[pos],&argv[pos]);
+                    exit(0);
+                }
+            }else{
+                //親
+                close(pipe_ins[i-1][0]);
+                close(pipe_ins[i-1][1]);
+            }
         }
 
         free(pipe_strpos);
