@@ -24,7 +24,10 @@ int piping(char **argv){
     }
     
     if(pipes == 0){
-        if(!waitchild(call(argv)))return -1;
+        if(!waitchild(call(argv))){
+            free(pipe_strpos);
+            return -1;
+        }
     }else{
         //必要なパイプの数分パイプを作成
         int **pipe_ins = (int**)malloc(pipes * sizeof(int));
