@@ -23,6 +23,9 @@ int piping(char **argv){
         }
     }
     
+    //fprintf(stderr,"%d pipes\n",pipes);
+    //for(int i=0;i<pipes;i++)fprintf(stderr,"%d\n",pipe_strpos[i]);
+
     if(pipes == 0){
         if(!waitchild(call(argv))){
             free(pipe_strpos);
@@ -35,12 +38,20 @@ int piping(char **argv){
             pipe_ins[i] = (int*)malloc(sizeof(int) * 2);
         }
 
+        //pidを格納
+        pid_t *child_pids = (pid_t*)malloc((pipes + 1) * sizeof(pid_t));
+
+        //コマンドをforkして実行
         for(int i=0;i<pipes + 1;i++){
             //forkする前に最後の一回以外でパイプを作成
-            if(i == pipes)pipe(pipe_ins[i-1]);
+            if(i == pipes){
+                pipe(pipe_ins[i-1]);
+            }
 
             //パイプの個数+1個分(実行する数execのぶん)forkする まだ実行しない
             pid_t pid = fork();
+            child_pids[i] = pid;
+
             if(pid < 0){
                 //例外処理
                 fprintf(stderr,"fork(2) failed.\n");
@@ -88,12 +99,18 @@ int piping(char **argv){
                     execvp(argv[pos],&argv[pos]);
                     exit(0);
                 }
-            }else{
+            }else if(i > 0){
                 //親
                 close(pipe_ins[i-1][0]);
                 close(pipe_ins[i-1][1]);
             }
         }
+
+        //待つ
+        for(int i=0;i<pipes + 1;i++){
+            waitchild(child_pids[i]);
+        }
+        
 
         free(pipe_strpos);
         for(int i=0;i<pipes;i++)free(pipe_ins[i]);
