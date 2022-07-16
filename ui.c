@@ -14,7 +14,7 @@ char *read_command(){
 	}
 
 	strcat(pathname,">");
-	fprintf(stderr,pathname);
+	fprintf(stderr,"%s",pathname);
 	
 	free(pathname);
 
