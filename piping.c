@@ -26,7 +26,7 @@ int piping(char **argv){
     }
     
     if(pipes == 0){
-
+        call(argv);
     }else{
         //必要なパイプの数分パイプを作成
         int **pipe_ins = (int**)malloc(pipes * sizeof(int));
