@@ -34,9 +34,6 @@ int piping(char **argv,char **output,char t){
         }
     }
     
-    //fprintf(stderr,"%d pipes\n",pipes);
-    //for(int i=0;i<pipes;i++)fprintf(stderr,"%d\n",pipe_strpos[i]);
-
     if(pipes == 0){
         /*
         if(!waitchild(call(argv))){
@@ -148,8 +145,6 @@ int piping(char **argv,char **output,char t){
         for(int i=0;i<pipes + 1;i++){
             waitchild(child_pids[i]);
         }
-
-
 
         free(pipe_strpos);
         for(int i=0;i<pipes;i++)free(pipe_ins[i]);
