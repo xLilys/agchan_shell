@@ -25,18 +25,20 @@ int piping(char **argv){
         }
     }
     
+    if(pipes == 0){
+
+    }else{
+        //必要なパイプの数分パイプを作成
+        int **pipe_ins = (int**)malloc(pipes * sizeof(int));
+        for(int i=0;i<pipes;i++){
+            pipe_ins[i] = (int*)malloc(sizeof(int) * 2);
+        }
 
 
-    //必要なパイプの数分パイプを作成
-    int **pipe_ins = (int**)malloc(pipes * sizeof(int));
-    for(int i=0;i<pipes;i++){
-        pipe_ins[i] = (int*)malloc(sizeof(int) * 2);
+        free(pipe_strpos);
+        for(int i=0;i<pipes;i++)free(pipe_ins[i]);
+        free(pipe_ins);
     }
-
-
-    free(pipe_strpos);
-    for(int i=0;i<pipes;i++)free(pipe_ins[i]);
-    free(pipe_ins);
 
     return 0;
 }
