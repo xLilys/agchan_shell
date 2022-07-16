@@ -62,5 +62,5 @@ int call(char **argv){
         
         for(int i=0;i<pipes;i++)free(pipe[i]);
         free(pipe);
-        return 0;
+        return ret;
 }
