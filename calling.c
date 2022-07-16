@@ -24,43 +24,41 @@ int call(char **argv){
                 }
         }
 
-        int **pipe = (int**)malloc(pipes * sizeof(int));
+        int **pipe_ins = (int**)malloc(pipes * sizeof(int));
         for(int i=0;i<pipes;i++){
-                pipe[i] = (int*)malloc(sizeof(int) * 2);
+                pipe_ins[i] = (int*)malloc(sizeof(int) * 2);
         }
-
-
-        pid_t pid;
-        pid = fork();
 
         int ret = -1;
+        if(pipes == 0){
+                pid_t pid = fork();
+                //子プロセス
+                if(pid < 0){
+                        //生成失敗
+                        fprintf(stderr,"fork(2) failed.\n");
+                        ret = 1;
 
-        if(pid<0){
-                fprintf(stderr,"fork(2) failed\n");
-                free(pipe);
-                ret = 1;
-        }
-        if(pid == 0){
-                execvp(argv[0],argv);
-                perror(argv[0]);
-                free(pipe);
-                ret = 99;
-        }else{
-                int status;
-                waitpid(pid,&status,0);
-                //printf("child (PID=%d) finished; ",pid);
-                if(WIFEXITED(status)){
-                        //printf("exit, status=%d\n",WEXITSTATUS(status));
-                }else if(WIFSIGNALED(status)){
-                        //printf("signal, sig=%d\n",WTERMSIG(status));
+                }else if(pid == 0){
+                        //子プロセス
+                        execvp(argv[0],argv);
+                        perror(argv[0]);
+                        ret = 99;
+
                 }else{
-                        fprintf(stderr,"abnormal exit\n");
+                        //親プロセス
+                        int status;
+                        waitpid(pid,&status,0);//wait
+                         if(WIFEXITED(status)){
+                        }else if(WIFSIGNALED(status)){
+                        }else{
+                                fprintf(stderr,"abnormal exit\n");
+                        }
+                        ret = 0;
                 }
-                ret = 0;
         }
 
         
-        for(int i=0;i<pipes;i++)free(pipe[i]);
-        free(pipe);
+        for(int i=0;i<pipes;i++)free(pipe_ins[i]);
+        free(pipe_ins);
         return ret;
 }
