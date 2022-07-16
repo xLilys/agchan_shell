@@ -85,7 +85,7 @@ char **parse_command(char *command){
 	for(int i=0;i<INPUT_BUFSIZE * sizeof(char);i++)element[i] = 0;
 	while(1){
 		char c = command[index++];
-		if(c == '\0' || c == EOF || c == 10 || c == '\n'){
+		if(c == '\0' || c == EOF || c == 10){
 			element[ip++] = '\0';
 			elements[ep++] = element;
 			elements[ep] = NULL;
