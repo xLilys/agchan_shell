@@ -21,7 +21,7 @@ int piping(char **argv){
     //パイプの必要数の検出と出現位置の記録
     int pipes = 0;
     int pc = DEFAULT_MAXPIPES;
-    unsigned int *pipe_strpos = (int*)malloc(pc * sizeof(int));
+    unsigned int *pipe_strpos = (unsigned int*)malloc(pc * sizeof(unsigned int));
     for(int i=0;argv[i] != NULL;i++){
         if(strcmp(argv[i],"|") == 0){
             free(argv[i]);//NULLで上書き前にfree
@@ -33,7 +33,8 @@ int piping(char **argv){
             pipe_strpos[pipes++] = i;
         }
     }
-    
+
+
     //リダイレクトする箇所を検出、位置の記録
     int lrdc = 0;
     int lredpipes_count = DEFAULT_MAXREDIRECTS;
@@ -51,7 +52,8 @@ int piping(char **argv){
         }
     }
     leftred_pos = realloc(leftred_pos,lrdc);
-    
+
+    //右
     int rrdc = 0;
     int rredpipes_count = DEFAULT_MAXREDIRECTS;
     unsigned int *rightred_pos = (unsigned int*)malloc(rredpipes_count * sizeof(unsigned int));
@@ -70,6 +72,11 @@ int piping(char **argv){
     rightred_pos = realloc(rightred_pos,rrdc);
 
 
+    //pidを格納
+    int pidc = 0;
+    pid_t *child_pids = (pid_t*)malloc((pipes + 1 + lrdc) * sizeof(pid_t));
+
+
     if(pipes == 0){
         if(!waitchild(call(argv))){
             free(pipe_strpos);
@@ -82,8 +89,6 @@ int piping(char **argv){
             pipe_ins[i] = (int*)malloc(sizeof(int) * 2);
         }
 
-        //pidを格納
-        pid_t *child_pids = (pid_t*)malloc((pipes + 1) * sizeof(pid_t));
 
         //コマンドをforkして実行
         for(int i=0;i<pipes + 1;i++){
@@ -94,7 +99,7 @@ int piping(char **argv){
 
             //パイプの個数+1個分(実行する数execのぶん)forkする まだ実行しない
             pid_t pid = fork();
-            child_pids[i] = pid;
+            child_pids[pidc++] = pid;
 
             if(pid < 0){
                 //例外処理
@@ -103,6 +108,11 @@ int piping(char **argv){
 
             }else if(pid == 0){
                 //子プロセス
+                //リダイレクト先になっているか調べる
+                //左
+                
+
+
                 if(i == 0){
                     //初回のコマンドは標準出力を次のパイプの入口にだけ繋げる
                     dup2(pipe_ins[0][1],1);
@@ -151,7 +161,7 @@ int piping(char **argv){
         }
 
         //待つ
-        for(int i=0;i<pipes + 1;i++){
+        for(int i=0;i<pidc;i++){
             waitchild(child_pids[i]);
         }
 
@@ -161,6 +171,9 @@ int piping(char **argv){
         free(pipe_ins);
     }
 
+    free(rightred_pos);
+    free(leftred_pos);
+    free(child_pids);
     return 0;
 }
 
