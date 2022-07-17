@@ -68,6 +68,20 @@ int piping(char **argv){
     rightred_pos = realloc(rightred_pos,rrdc);
 
     //右向き追記
+    int rrdc_add = 0;
+    int rredpipes_count_add = DEFAULT_MAXREDIRECTS;
+    unsigned int *rightred_pos_add = (unsigned int*)malloc(rredpipes_count_add * sizeof(unsigned int));
+    for(int i=0;i<elc;i++){
+        if(argv[i] == NULL)continue;
+        if(strcmp(argv[i],">>") == 0){
+            if(rrdc > rredpipes_count_add){
+                rredpipes_count_add += DEFAULT_MAXREDIRECTS;
+                rightred_pos_add = realloc(rightred_pos,rredpipes_count_add);
+            }
+            rightred_pos_add[rrdc_add++] = i;
+        }
+    }
+    rightred_pos_add = realloc(rightred_pos_add,rrdc_add);
 
 
     //pidを格納
@@ -76,7 +90,7 @@ int piping(char **argv){
 
 
     if(pipes == 0){
-        int rwpipes[2][2];
+        int rwpipes[3][2];
         if(lrdc > 0){
             int pos = leftred_pos[0];
             free(argv[pos]);
@@ -88,6 +102,12 @@ int piping(char **argv){
             free(argv[pos]);
             argv[pos] = NULL;
             pipe(rwpipes[1]);
+        }
+        if(rrdc_add > 0){
+            int pos = rightred_pos_add[0];
+            free(argv[pos]);
+            argv[pos] = NULL;
+            pipe(rwpipes[2]);
         }
 
         pid_t pid = fork();
@@ -106,6 +126,11 @@ int piping(char **argv){
                 dup2(rwpipes[1][1],1);
                 close(rwpipes[1][0]);
                 close(rwpipes[1][1]);
+            }
+            if(rrdc_add > 0){
+                dup2(rwpipes[2][1],1);
+                close(rwpipes[2][0]);
+                close(rwpipes[2][1]);
             }
 
             execvp(argv[0],argv);
@@ -157,6 +182,28 @@ int piping(char **argv){
 
                 close(rwpipes[1][0]);
                 close(rwpipes[1][1]);
+            }
+            if(rrdc_add > 0){
+                int pos = rightred_pos_add[0];
+                FILE *writefile = fopen(argv[pos + 1],"a");
+
+                int writelen = DEFAULT_MAXWRITEBUF;
+                char *writebuf = (char*)malloc(sizeof(char) * writelen);
+                while(1){
+                    int res = read(rwpipes[2][0],writebuf,writelen);
+                    if(!(res < writelen)){
+                        writelen += DEFAULT_MAXWRITEBUF;
+                        writebuf = realloc(writebuf,writelen);
+                    }else{
+                        break;
+                    }
+                }
+                fputs(writebuf,writefile);
+                free(writebuf);
+                fclose(writefile);
+
+                close(rwpipes[2][0]);
+                close(rwpipes[2][1]);
             }
         }
 
