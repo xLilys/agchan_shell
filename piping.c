@@ -13,6 +13,9 @@ enum pipe_rw{
 
 
 int piping(char **argv){
+    //リダイレクトする箇所を予めパイプで繋ぐ　リダイレクト元あるいは先がファイルであれば中身を入出力する
+    
+
     //パイプの必要数の検出と出現位置の記録
     int pipes = 0;
     int pc = DEFAULT_MAXPIPES;
