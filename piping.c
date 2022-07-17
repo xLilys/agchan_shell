@@ -27,9 +27,6 @@ int piping(char **argv){
             pipe_strpos[pipes++] = i;
         }
     }
-    
-    //fprintf(stderr,"%d pipes\n",pipes);
-    //for(int i=0;i<pipes;i++)fprintf(stderr,"%d\n",pipe_strpos[i]);
 
     if(pipes == 0){
         if(!waitchild(call(argv))){
