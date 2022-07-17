@@ -25,6 +25,7 @@ int piping(char **argv,char **output,char t){
     unsigned int *pipe_strpos = (int*)malloc(pc * sizeof(int));
     for(int i=0;argv[i] != NULL;i++){
         if(strcmp(argv[i],"|") == 0){
+            free(argv[i]);//書き換える前にfree
             argv[i] = NULL;
             if(pipes > pc){
                 pc += DEFAULT_MAXPIPES;
@@ -167,8 +168,6 @@ int piping(char **argv,char **output,char t){
 
         close(ejectpipe[0]);
         close(ejectpipe[1]);
-
-        //fprintf(stderr,"%s",*output);
 
     }
 

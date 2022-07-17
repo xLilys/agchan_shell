@@ -26,7 +26,9 @@ int main(int argc,int *argv[]){
 			execl("./run","/run",NULL);
 		}
 
-		
+		int parsed_args = 0;
+		while(elements[parsed_args] != NULL)parsed_args++;
+
 		//様々場合分けして実行
 		//cdコマンド
 		char tmp[] = "cd";
@@ -58,7 +60,8 @@ int main(int argc,int *argv[]){
 					}else{
 						//成功
 						//出力にパイプさせてコマンド実行
-						elements[el] = NULL;
+						free(elements[el]);//書き換える前にfree
+						elements[el] = NULL;//いらん引数が渡らないように>をNULLに書き換え
 
 						char *output;
 						//fprintf(stderr,"%x\n",&output);
@@ -80,11 +83,10 @@ int main(int argc,int *argv[]){
 		}
 
 
-		int q=0;
-		while(1){
-			if(elements[q] != NULL)free(elements[q]);
-			else break;
-			q++;
+		//elementsのメモリを解法
+		for(int i=0;i<parsed_args;i++){
+			if(elements[i] == NULL)continue;
+			free(elements[i]);
 		}
 		free(elements);
 		free(input_str);
