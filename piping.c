@@ -67,6 +67,8 @@ int piping(char **argv){
     }
     rightred_pos = realloc(rightred_pos,rrdc);
 
+    //右向き追記
+
 
     //pidを格納
     int pidc = 0;
@@ -74,6 +76,93 @@ int piping(char **argv){
 
 
     if(pipes == 0){
+        int rwpipes[2][2];
+        if(lrdc > 0){
+            int pos = leftred_pos[0];
+            free(argv[pos]);
+            argv[pos] = NULL;
+            pipe(rwpipes[0]);
+        }
+        if(rrdc > 0){
+            int pos = rightred_pos[0];
+            free(argv[pos]);
+            argv[pos] = NULL;
+            pipe(rwpipes[1]);
+        }
+
+        pid_t pid = fork();
+
+        if(pid < 0){
+            fprintf(stderr,"%s","redirecting error:fork(2) failed.");
+            return -1;
+        }else if(pid == 0){
+            //子
+            if(lrdc > 0){
+                dup2(rwpipes[0][0],0);
+                close(rwpipes[0][0]);
+                close(rwpipes[0][1]);
+            }
+            if(rrdc > 0){
+                dup2(rwpipes[1][1],1);
+                close(rwpipes[1][0]);
+                close(rwpipes[1][1]);
+            }
+
+            execvp(argv[0],argv);
+            exit(0);
+        }else{
+            //親
+            if(lrdc>0){
+                int pos = leftred_pos[0];
+                FILE *readfile = fopen(argv[pos + 1],"r");
+                
+                int cs = 0;
+                int readlen = DEFAULT_MAXREADBUF;
+                char *readbuf = (char*)malloc(sizeof(char) * readlen);
+                while(1){
+                    char c = fgetc(readfile);
+                    if(c == EOF)break;
+                    readbuf[cs++] = c;
+                    if(cs > readlen){
+                        readlen += DEFAULT_MAXREADBUF;
+                        readbuf = realloc(readbuf,readlen);
+                    }
+                }
+
+                write(rwpipes[0][1],readbuf,cs);
+                free(readbuf);
+                fclose(readfile);
+
+                close(rwpipes[0][0]);
+                close(rwpipes[0][1]);
+            }
+            if(rrdc > 0){
+                int pos = rightred_pos[0];
+                FILE *writefile = fopen(argv[pos + 1],"w");
+
+                int writelen = DEFAULT_MAXWRITEBUF;
+                char *writebuf = (char*)malloc(sizeof(char) * writelen);
+                while(1){
+                    int res = read(rwpipes[1][0],writebuf,writelen);
+                    if(!(res < writelen)){
+                        writelen += DEFAULT_MAXWRITEBUF;
+                        writebuf = realloc(writebuf,writelen);
+                    }else{
+                        break;
+                    }
+                }
+                fputs(writebuf,writefile);
+                free(writebuf);
+                fclose(writefile);
+
+                close(rwpipes[1][0]);
+                close(rwpipes[1][1]);
+            }
+        }
+
+        waitchild(pid);
+
+        /*
         if(lrdc>0){
             //左リダイレクトが存在するとき
             int pos = leftred_pos[0];
@@ -127,60 +216,8 @@ int piping(char **argv){
             return -1;
             }
         }
-
-        /*
-        if(strcmp(argv[k-1],"<") == 0){
-
-            //リダイレクト先になってたとき
-            free(argv[k-1]);
-            argv[k-1] = NULL;
-            //パイプ作る
-            int pc_pipe[2];
-            pipe(pc_pipe);
-
-            FILE *readfile = fopen(argv[k],"r");
-            int cs = 0;
-            int readlen = DEFAULT_MAXREADBUF;
-            char *readbuf = (char*)malloc(sizeof(char) * readlen);
-            while(1){
-                char c = fgetc(readfile);
-                if(c == EOF)break;
-                readbuf[cs++] = c;
-                if(cs > readlen){
-                    readlen += DEFAULT_MAXREADBUF;
-                    readbuf = realloc(readbuf,readlen);
-                }
-            }
-
-            pid_t pid = fork();
-
-            if(pid<0){
-                fprintf(stderr,"%s","redirecting error:fork(2) failed.");
-                return -1;
-            }else if(pid == 0){
-                //子
-                dup2(pc_pipe[0],0);
-                close(pc_pipe[0]);
-                close(pc_pipe[1]);
-                execvp(argv[0],argv);
-                exit(0);
-
-            }else{
-                //親
-                write(pc_pipe[1],readbuf,cs);
-                close(pc_pipe[0]);
-                close(pc_pipe[1]);
-            }
-
-            waitchild(pid);
-        }else if(strcmp(argv[k-1],">") == 0){
-            ;
-        }else{
-            
-            }
-        }
         */
-        
+
     }else{
         //必要なパイプの数分パイプを作成
         int **pipe_ins = (int**)malloc(pipes * sizeof(int));
