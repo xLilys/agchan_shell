@@ -83,20 +83,6 @@ int piping(char **argv){
             int pc_pipe[2];
             pipe(pc_pipe);
 
-            FILE *readfile = fopen(argv[pos + 1],"r");
-            int cs = 0;
-            int readlen = DEFAULT_MAXREADBUF;
-            char *readbuf = (char*)malloc(sizeof(char) * readlen);
-            while(1){
-                char c = fgetc(readfile);
-                if(c == EOF)break;
-                readbuf[cs++] = c;
-                if(cs > readlen){
-                    readlen += DEFAULT_MAXREADBUF;
-                    readbuf = realloc(readbuf,readlen);
-                }
-            }
-
             pid_t pid = fork();
 
             if(pid < 0){
@@ -112,17 +98,28 @@ int piping(char **argv){
 
             }else{
                 //親
+                FILE *readfile = fopen(argv[pos + 1],"r");
+                int cs = 0;
+                int readlen = DEFAULT_MAXREADBUF;
+                char *readbuf = (char*)malloc(sizeof(char) * readlen);
+                while(1){
+                    char c = fgetc(readfile);
+                    if(c == EOF)break;
+                    readbuf[cs++] = c;
+                    if(cs > readlen){
+                        readlen += DEFAULT_MAXREADBUF;
+                        readbuf = realloc(readbuf,readlen);
+                    }
+                }
+
                 write(pc_pipe[1],readbuf,cs);
+                free(readbuf);
+                fclose(readfile);
                 close(pc_pipe[0]);
                 close(pc_pipe[1]);
             }
 
             waitchild(pid);
-        }else if(rrdc > 0){
-            int pos = rightred_pos[0];
-            free(argv[pos]);
-            argv[pos] = NULL;
-
 
         }else{
             if(!waitchild(call(argv))){
