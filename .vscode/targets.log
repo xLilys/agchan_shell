@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Jul 16 23:43:37 2022
+# Make data base, printed on Sun Jul 17 19:27:01 2022
 
 # Variables
 
@@ -121,7 +121,7 @@ MAKE_VERSION := 4.3
 # environment
 _ = /mnt/c/Users/yuuki/AppData/Local/Programs/Microsoft VS Code/bin/code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-519e8ee1-860b-456e-989e-8acddd1bd9ef.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-41c4c5d3-6531-4136-8dfc-ffb2536c5b0a.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -168,7 +168,7 @@ calling.c:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-16 23:32:57.297335739
+#  Last modified 2022-07-17 02:58:15.857517451
 #  File has been updated.
 #  Successfully updated.
 
@@ -254,12 +254,12 @@ calling.o: calling.c
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 26 / storage = 207 B / avg = 7 B
-# current buf: size = 8162 B / used = 207 B / count = 26 / avg = 7 B
+# strcache buffers: 1 (0) / strings = 26 / storage = 199 B / avg = 7 B
+# current buf: size = 8162 B / used = 199 B / count = 26 / avg = 7 B
 
 # strcache performance: lookups = 44 / hit rate = 40%
 # hash-table stats:
 # Load=26/8192=0%, Rehash=0, Collisions=0/44=0%
-# Finished Make data base on Sat Jul 16 23:43:37 2022
+# Finished Make data base on Sun Jul 17 19:27:01 2022
 
  

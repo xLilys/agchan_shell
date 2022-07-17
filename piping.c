@@ -1,10 +1,6 @@
 #include "piping.h"
 #include "calling.h"
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 enum pipe_rw{
     pipe_read,
