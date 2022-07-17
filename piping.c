@@ -37,8 +37,9 @@ int piping(char **argv){
     //リダイレクトする箇所を検出、位置の記録
     int lrdc = 0;
     int lredpipes_count = DEFAULT_MAXREDIRECTS;
-    unsigned int *leftred_pos = (int*)malloc(lredpipes_count * sizeof(int));
+    unsigned int *leftred_pos = (unsigned int*)malloc(lredpipes_count * sizeof(unsigned int));
     for(int i=0;i<elc;i++){
+        if(argv[i] == NULL)continue;
         if(strcmp(argv[i],"<") == 0){
             free(argv[i]);//NULLで上書き前にfree
             argv[i] = NULL;
@@ -50,15 +51,12 @@ int piping(char **argv){
         }
     }
     leftred_pos = realloc(leftred_pos,lrdc);
-    /*
-    for(int i=0;i<rdc;i++){
-        fprintf(stderr,"%d,",leftred_pos[i]);
-    }
-    */
+    
     int rrdc = 0;
     int rredpipes_count = DEFAULT_MAXREDIRECTS;
-    unsigned int *rightred_pos = (int*)malloc(rredpipes_count * sizeof(int));
+    unsigned int *rightred_pos = (unsigned int*)malloc(rredpipes_count * sizeof(unsigned int));
     for(int i=0;i<elc;i++){
+        if(argv[i] == NULL)continue;
         if(strcmp(argv[i],">") == 0){
             free(argv[i]);//NULLで上書き前にfree
             argv[i] = NULL;
@@ -70,11 +68,6 @@ int piping(char **argv){
         }
     }
     rightred_pos = realloc(rightred_pos,rrdc);
-    /*
-    for(int i=0;i<rrdc;i++){
-        fprintf(stderr,"%d,",rightred_pos[i]);
-    }
-    */
 
 
     if(pipes == 0){
