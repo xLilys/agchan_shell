@@ -23,8 +23,21 @@ int main(int argc,int *argv[]){
 				fprintf(stderr,"No such directory.\n");
 			}
 		}else{
-			char **output;
-			piping(elements,output,0);
+			int el = 0;
+			for(int i=0;elements[i + 1] != NULL;i++)el++;
+			if(strcmp(elements[el],">") == 0){
+				if(elements[el+1] == NULL){
+					fprintf(stderr,"expected a string, but found end of the statement.\n%s\n",input_str);
+					int i=0;
+					while(input_str[i++] != '>')fprintf(stderr,"%c",' ');
+					fprintf(stderr,"%c",'^');
+				}
+				//指示されたファイルにリダイレクト
+				//FILE writefile = fopen("")
+			}
+
+			//char **output;
+			//piping(elements,output,0);
 		}
 
 
@@ -36,7 +49,7 @@ int main(int argc,int *argv[]){
 		}
 		free(elements);
 		free(input_str);
-		putchar('\n');
+		fprintf(stderr,"%c",'\n');
 	}
 
 	return 0;
