@@ -50,11 +50,7 @@ int piping(char **argv){
         }
     }
     leftred_pos = realloc(leftred_pos,lrdc);
-    /*
-    for(int i=0;i<rdc;i++){
-        fprintf(stderr,"%d,",leftred_pos[i]);
-    }
-    */
+
     int rrdc = 0;
     int rredpipes_count = DEFAULT_MAXREDIRECTS;
     unsigned int *rightred_pos = (int*)malloc(rredpipes_count * sizeof(int));
@@ -70,11 +66,6 @@ int piping(char **argv){
         }
     }
     rightred_pos = realloc(rightred_pos,rrdc);
-    /*
-    for(int i=0;i<rrdc;i++){
-        fprintf(stderr,"%d,",rightred_pos[i]);
-    }
-    */
 
 
     if(pipes == 0){
