@@ -2,13 +2,6 @@
 #include "calling.h"
 
 
-
-enum pipe_rw{
-    pipe_read,
-    pipe_write
-};
-
-
 int piping(char **argv){
     //リダイレクトする箇所を予めパイプで繋ぐ　リダイレクト元あるいは先がファイルとして存在しているかを確認し、存在すればforkしてパイプをつなぐ
     int elc = 0;
