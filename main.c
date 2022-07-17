@@ -13,6 +13,9 @@ int main(int argc,int *argv[]){
 		char *input_str = read_command();
 		if(input_str==NULL)continue;
 		char **elements = parse_command(input_str);
+
+		int elc = 0;
+		while(elements[elc] != NULL)elc++;
 		
 		//様々場合分けして実行
 		//cdコマンド
@@ -27,11 +30,8 @@ int main(int argc,int *argv[]){
 		}
 
 
-		int q=0;
-		while(1){
-			if(elements[q] != NULL)free(elements[q]);
-			else break;
-			q++;
+		for(int i=0;i<elc;i++){
+			if(elements[i] != NULL)free(elements[i]);
 		}
 		free(elements);
 		free(input_str);

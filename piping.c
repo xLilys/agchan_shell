@@ -14,7 +14,10 @@ enum pipe_rw{
 
 int piping(char **argv){
     //リダイレクトする箇所を予めパイプで繋ぐ　リダイレクト元あるいは先がファイルであれば中身を入出力する
-    
+    int elc = 0;
+    while(argv[elc] != NULL)elc++;
+
+    fprintf(stderr,"%d\n",elc);
 
     //パイプの必要数の検出と出現位置の記録
     int pipes = 0;
@@ -22,6 +25,7 @@ int piping(char **argv){
     unsigned int *pipe_strpos = (int*)malloc(pc * sizeof(int));
     for(int i=0;argv[i] != NULL;i++){
         if(strcmp(argv[i],"|") == 0){
+            free(argv[i]);
             argv[i] = NULL;
             if(pipes > pc){
                 pc += DEFAULT_MAXPIPES;
