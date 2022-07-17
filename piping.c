@@ -163,10 +163,13 @@ int piping(char **argv,char **output,char t){
             res = read(ejectpipe[0],out,bufsize);
         }
 
-        fprintf(stderr,"%s",out);
+        *output = out;
 
         close(ejectpipe[0]);
         close(ejectpipe[1]);
+
+        //fprintf(stderr,"%s",*output);
+
     }
 
     return 0;
