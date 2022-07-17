@@ -24,7 +24,7 @@ int piping(char **argv){
     unsigned int *pipe_strpos = (int*)malloc(pc * sizeof(int));
     for(int i=0;argv[i] != NULL;i++){
         if(strcmp(argv[i],"|") == 0){
-            free(argv[i]);
+            free(argv[i]);//NULLで上書き前にfree
             argv[i] = NULL;
             if(pipes > pc){
                 pc += DEFAULT_MAXPIPES;
@@ -33,6 +33,28 @@ int piping(char **argv){
             pipe_strpos[pipes++] = i;
         }
     }
+    
+    //リダイレクトする箇所を検出、位置の記録
+    int rdc = 0;
+    int redpipes_count = DEFAULT_MAXREDIRECTS;
+    unsigned int *leftred_pos = (int*)malloc(redpipes_count * sizeof(int));
+    for(int i=0;i<elc;i++){
+        if(strcmp(argv[i],"<") == 0){
+            free(argv[i]);//NULLで上書き前にfree
+            argv[i] = NULL;
+            if(rdc > redpipes_count){
+                redpipes_count += DEFAULT_MAXREDIRECTS;
+                leftred_pos = realloc(leftred_pos,redpipes_count);
+            }
+            leftred_pos[rdc++] = i;
+        }
+    }
+    leftred_pos = realloc(leftred_pos,rdc);
+    /*
+    for(int i=0;i<rdc;i++){
+        fprintf(stderr,"%d,",leftred_pos[i]);
+    }
+    */
 
     if(pipes == 0){
         if(!waitchild(call(argv))){
