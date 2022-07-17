@@ -35,6 +35,7 @@ int piping(char **argv){
     }
     
     //リダイレクトする箇所を検出、位置の記録
+    //左
     int lrdc = 0;
     int lredpipes_count = DEFAULT_MAXREDIRECTS;
     unsigned int *leftred_pos = (int*)malloc(lredpipes_count * sizeof(int));
@@ -50,7 +51,8 @@ int piping(char **argv){
         }
     }
     leftred_pos = realloc(leftred_pos,lrdc);
-
+    
+    //右
     int rrdc = 0;
     int rredpipes_count = DEFAULT_MAXREDIRECTS;
     unsigned int *rightred_pos = (int*)malloc(rredpipes_count * sizeof(int));
