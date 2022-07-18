@@ -10,7 +10,6 @@
 #include "builtin_commands.h"
 
 int main(int argc,int *argv[]){
-
 	while(1){
 		char *input_str = read_command();
 		if(input_str==NULL)continue;
@@ -20,8 +19,9 @@ int main(int argc,int *argv[]){
 		while(elements[elc] != NULL)elc++;
 		
 		//ビルトインコマンドの実行
-		for(int i=0;i<)
+		int ck = __bcs_func__(elc,elements);
 
+		//更新用
 		if(strcmp(elements[0],"update") == 0){
 			char *update_command[] = {"make",NULL};
 			if(waitchild(call(update_command))){
@@ -36,7 +36,7 @@ int main(int argc,int *argv[]){
 				execl("./run","./run",NULL);
 			}
 		}else{
-			piping(elements);
+			if(!ck)piping(elements);
 		}
 
 
