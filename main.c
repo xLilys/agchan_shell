@@ -8,8 +8,13 @@
 #include "piping.h"
 #include "calling.h"
 #include "builtin_commands.h"
+#include "login_AA.h"
+
+
 
 int main(int argc,int *argv[]){
+	printf("%s%s\n",loginAA,"Welcome agsh! made by @Agchan_Luice twitter → https://twitter.com/Agchan_Luice\ngithub repository → https://github.com/xLilys/agchan_shell");
+
 	while(1){
 		char *input_str = read_command();
 		if(input_str==NULL)continue;
@@ -27,13 +32,13 @@ int main(int argc,int *argv[]){
 			if(waitchild(call(update_command))){
 				fprintf(stderr,"update failed.\n");
 			}else{
-				fprintf(stderr,"update succeeded.\n");
 				for(int i=0;i<elc;i++){
 					if(elements[i] != NULL)free(elements[i]);
 				}
 				free(elements);
 				free(input_str);
-				execl("./run","./run",NULL);
+				fprintf(stderr,"update succeeded.\n");
+				execl("./agsh","./agsh",NULL);
 			}
 		}else{
 			if(!ck)piping(elements);
