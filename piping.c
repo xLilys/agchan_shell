@@ -32,6 +32,9 @@ int piping(char **argv){
     for(int i=0;i<elc;i++){
         if(argv[i] == NULL)continue;
         if(strcmp(argv[i],"<") == 0){
+            if(argv[i+1] == NULL){
+                fprintf(stderr,"Expected a string, but found end of the statement\n");
+            }
             if(lrdc > lredpipes_count){
                 lredpipes_count += DEFAULT_MAXREDIRECTS;
                 leftred_pos = realloc(leftred_pos,lredpipes_count);
@@ -48,6 +51,9 @@ int piping(char **argv){
     for(int i=0;i<elc;i++){
         if(argv[i] == NULL)continue;
         if(strcmp(argv[i],">") == 0){
+            if(argv[i+1] == NULL){
+                fprintf(stderr,"Expected a string, but found end of the statement\n");
+            }
             if(rrdc > rredpipes_count){
                 rredpipes_count += DEFAULT_MAXREDIRECTS;
                 rightred_pos = realloc(rightred_pos,rredpipes_count);
@@ -206,6 +212,21 @@ int piping(char **argv){
             pipe_ins[i] = (int*)malloc(sizeof(int) * 2);
         }
 
+        //リダイレクト用のパイプ
+        int **left_redpipe = (int**)malloc(sizeof(int) * lrdc);
+        int **right_redpipe = (int**)malloc(sizeof(int) * rrdc);
+        int **right_redpipe_add = (int**)malloc(sizeof(int) * rrdc_add);
+
+        for(int i=0;i<lrdc;i++)left_redpipe[i] = (int*)malloc(sizeof(int) * 2);
+        for(int i=0;i<rrdc;i++)right_redpipe[i] = (int*)malloc(sizeof(int) * 2);
+        for(int i=0;i<rrdc_add;i++)right_redpipe_add[i] = (int*)malloc(sizeof(int) * 2);
+
+
+        for(int i=0;i<lrdc;i++)pipe(left_redpipe[i]);
+        for(int i=0;i<rrdc;i++)pipe(right_redpipe[i]);
+        for(int i=0;i<rrdc_add;i++)pipe(right_redpipe_add[i]);
+
+        int lrd_cc = 0;
 
         //コマンドをforkして実行
         for(int i=0;i<pipes + 1;i++){
@@ -224,6 +245,16 @@ int piping(char **argv){
                 break;//例外が起きたらループを抜ける
 
             }else if(pid == 0){
+                //リダイレクトがあれば親とパイプをつなぐ
+                //左
+                if(i == 0){
+                    for(int i=0;argv[i] != NULL;i++){
+                        if(strcmp(argv[i],"<") == 0){
+
+                        }
+                    }
+                }
+                
 
                 if(i == 0){
                     //初回のコマンドは標準出力を次のパイプの入口にだけ繋げる
