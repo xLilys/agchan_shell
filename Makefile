@@ -1,5 +1,5 @@
-main:main.o ui.o calling.o piping.o
-	gcc -Wall -O2 -o run main.o ui.o calling.o piping.o
+main:main.o ui.o calling.o piping.o builtin_commands.o
+	gcc -Wall -O2 -o run main.o ui.o calling.o piping.o builtin_commands.o
 	rm *.o
 main.o:main.c
 	gcc -c main.c
@@ -9,5 +9,7 @@ calling.o:calling.c
 	gcc -c calling.c
 piping.o:piping.c
 	gcc -c piping.c
+builtin_commands.o:builtin_commands.c
+	gcc -c builtin_commands.c
 clean:
 	rm *.o

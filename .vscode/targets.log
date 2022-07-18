@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Jul 16 23:43:37 2022
+# Make data base, printed on Mon Jul 18 17:42:56 2022
 
 # Variables
 
@@ -49,7 +49,7 @@ MAKEFLAGS = pqrR
 # makefile
 CURDIR := /home/yuuki/programs/C/agchan_shell
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # automatic
@@ -121,7 +121,7 @@ MAKE_VERSION := 4.3
 # environment
 _ = /mnt/c/Users/yuuki/AppData/Local/Programs/Microsoft VS Code/bin/code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-519e8ee1-860b-456e-989e-8acddd1bd9ef.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-41c4c5d3-6531-4136-8dfc-ffb2536c5b0a.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -149,9 +149,9 @@ WSL_DISTRO_NAME = Ubuntu-22.04
 
 # Directories
 
-# . (device 2064, inode 1634): 15 files, no impossibilities.
+# . (device 2064, inode 1634): 20 files, no impossibilities.
 
-# 15 files, no impossibilities in 1 directories.
+# 20 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -168,7 +168,7 @@ calling.c:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-16 23:32:57.297335739
+#  Last modified 2022-07-18 17:42:51.709574871
 #  File has been updated.
 #  Successfully updated.
 
@@ -183,8 +183,14 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 13):
+#  recipe to execute (from 'Makefile', line 15):
 	rm *.o
+
+# Not a target:
+builtin_commands.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 .DEFAULT:
@@ -212,18 +218,25 @@ piping.o: piping.c
 #  recipe to execute (from 'Makefile', line 11):
 	gcc -c piping.c
 
+builtin_commands.o: builtin_commands.c
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 13):
+	gcc -c builtin_commands.c
+
 # Not a target:
 main.c:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
-main: main.o ui.o calling.o piping.o
+main: main.o ui.o calling.o piping.o builtin_commands.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 2):
-	gcc -Wall -O2 -o run main.o ui.o calling.o piping.o
+	gcc -Wall -O2 -o run main.o ui.o calling.o piping.o builtin_commands.o
 	rm *.o
 
 main.o: main.c
@@ -247,19 +260,19 @@ calling.o: calling.c
 	gcc -c calling.c
 
 # files hash-table stats:
-# Load=14/1024=1%, Rehash=0, Collisions=0/36=0%
+# Load=16/1024=2%, Rehash=0, Collisions=0/41=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 26 / storage = 207 B / avg = 7 B
-# current buf: size = 8162 B / used = 207 B / count = 26 / avg = 7 B
+# strcache buffers: 1 (0) / strings = 28 / storage = 252 B / avg = 9 B
+# current buf: size = 8162 B / used = 252 B / count = 28 / avg = 9 B
 
-# strcache performance: lookups = 44 / hit rate = 40%
+# strcache performance: lookups = 53 / hit rate = 47%
 # hash-table stats:
-# Load=26/8192=0%, Rehash=0, Collisions=0/44=0%
-# Finished Make data base on Sat Jul 16 23:43:37 2022
+# Load=28/8192=0%, Rehash=0, Collisions=0/53=0%
+# Finished Make data base on Mon Jul 18 17:42:56 2022
 
  

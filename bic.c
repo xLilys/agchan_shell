@@ -1,3 +1,0 @@
-#include "bic.h"
-
-

@@ -7,7 +7,7 @@
 #include "ui.h"
 #include "piping.h"
 #include "calling.h"
-#include "bic.h"
+#include "builtin_commands.h"
 
 int main(int argc,int *argv[]){
 
@@ -19,15 +19,10 @@ int main(int argc,int *argv[]){
 		int elc = 0;
 		while(elements[elc] != NULL)elc++;
 		
-		//様々場合分けして実行
-		//cdコマンド
+		//ビルトインコマンドの実行
+		for(int i=0;i<)
 
-		char tmp[] = "cd";
-		if(strcmp(elements[0],tmp) == 0){
-			if(!!chdir(elements[1])){
-				fprintf(stderr,"No such directory.\n");
-			}
-		}else if(strcmp(elements[0],"update") == 0){
+		if(strcmp(elements[0],"update") == 0){
 			char *update_command[] = {"make",NULL};
 			if(waitchild(call(update_command))){
 				fprintf(stderr,"update failed.\n");
