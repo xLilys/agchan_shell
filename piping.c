@@ -239,7 +239,6 @@ int piping(char **argv){
         for(int i=0;i<rrdc;i++)right_redpipe[i] = (int*)malloc(sizeof(int) * 2);
         for(int i=0;i<rrdc_add;i++)right_redpipe_add[i] = (int*)malloc(sizeof(int) * 2);
 
-
         for(int i=0;i<lrdc;i++)pipe(left_redpipe[i]);
         for(int i=0;i<rrdc;i++)pipe(right_redpipe[i]);
         for(int i=0;i<rrdc_add;i++)pipe(right_redpipe_add[i]);
@@ -264,29 +263,61 @@ int piping(char **argv){
 
             }else if(pid == 0){
                 //リダイレクトがあれば親とパイプをつなぐ
-                //左
+                
                 if(i == 0){
+                    //左
                     for(int j=0;argv[j] != NULL;j++){
                         if(strcmp(argv[j],"<") == 0){
-                            fprintf(stderr,"dup pipe\n");
+                            free(argv[j]);
+                            argv[j] = NULL;
                             dup2(left_redpipe[lrdc][0],0);
                             close(left_redpipe[lrdc][0]);
                             close(left_redpipe[lrdc][1]);
                             lrdc++;
                         }
                     }
+
+                    //右
+                    for(int j=0;argv[j] != NULL;j++){
+                        if(strcmp(argv[j],">") == 0){
+                            free(argv[j]);
+                            argv[j] = NULL;
+                            dup2(right_redpipe[rrdc][1],1);
+                            close(right_redpipe[rrdc][0]);
+                            close(right_redpipe[rrdc][1]);
+                            rrdc++;
+                        }
+                    }
+
+
                 }else{
-                    for(int j=0;argv[j + pipe_strpos[i-1]] != NULL;j++){
+                    //左
+
+                    for(int j=pipe_strpos[i-1] + 1;j<elc;j++){
+                        if(argv[j] == NULL)continue;
                         if(strcmp(argv[j],"<") == 0){
-                            fprintf(stderr,"dup pipe\n");
+                            free(argv[j]);
+                            argv[j] = NULL;
                             dup2(left_redpipe[lrdc][0],0);
                             close(left_redpipe[lrdc][0]);
                             close(left_redpipe[lrdc][1]);
                             lrdc++;
+                        }
+                    }
+                    
+                    //右
+                    for(int j=pipe_strpos[i-1] + 1;j<elc;j++){
+                        if(argv[j] == NULL)continue;
+                        if(strcmp(argv[j],">") == 0){
+                            free(argv[j]);
+                            argv[j] = NULL;
+                            dup2(right_redpipe[rrdc][1],1);
+                            close(right_redpipe[rrdc][0]);
+                            close(right_redpipe[rrdc][1]);
+                            rrdc++;
                         }
                     }
                 }
-                
 
                 if(i == 0){
                     //初回のコマンドは標準出力を次のパイプの入口にだけ繋げる
@@ -328,10 +359,142 @@ int piping(char **argv){
                     execvp(argv[pos],&argv[pos]);
                     exit(0);
                 }
-            }else if(i > 0){
-                //親
-                close(pipe_ins[i-1][0]);
-                close(pipe_ins[i-1][1]);
+            }else{
+                //親プロセス
+                if(i > 0){
+                    //子プロセスとのパイプ
+                    close(pipe_ins[i-1][0]);
+                    close(pipe_ins[i-1][1]);
+                }
+                
+                
+                //リダイレクト用のパイプ
+                if(i == 0){
+                    //左
+                    for(int j=0;argv[j] != NULL;j++){
+                        if(strcmp(argv[j],"<") == 0){
+                            free(argv[j]);
+                            argv[j] = NULL;
+                            int pos = j;
+                            FILE *readfile = fopen(argv[pos + 1],"r");
+                            
+                            int cs = 0;
+                            int readlen = DEFAULT_MAXREADBUF;
+                            char *readbuf = (char*)malloc(sizeof(char) * readlen);
+                            while(1){
+                                char c = fgetc(readfile);
+                                if(c == EOF)break;
+                                readbuf[cs++] = c;
+                                if(cs > readlen){
+                                    readlen += DEFAULT_MAXREADBUF;
+                                    readbuf = realloc(readbuf,readlen);
+                                }
+                            }
+
+                            write(left_redpipe[lrdc][1],readbuf,cs);
+                            free(readbuf);
+                            fclose(readfile);
+
+                            close(left_redpipe[lrdc][0]);
+                            close(left_redpipe[lrdc][1]);
+                            lrdc++;
+                        }
+                    }
+
+                    //右
+                    for(int j=0;argv[j] != NULL;j++){
+                        if(strcmp(argv[j],">") == 0){
+                            free(argv[j]);
+                            argv[j] = NULL;
+                            int pos = j;
+                            FILE *writefile = fopen(argv[pos + 1],"w");
+
+                            int writelen = DEFAULT_MAXWRITEBUF;
+                            char *writebuf = (char*)malloc(sizeof(char) * writelen);
+                            while(1){
+                                int res = read(right_redpipe[rrdc][0],writebuf,writelen);
+                                if(!(res < writelen)){
+                                    writelen += DEFAULT_MAXWRITEBUF;
+                                    writebuf = realloc(writebuf,writelen);
+                                }else{
+                                    break;
+                                }
+                            }
+                            fputs(writebuf,writefile);
+                            free(writebuf);
+                            fclose(writefile);
+                            
+
+                            close(left_redpipe[rrdc][0]);
+                            close(left_redpipe[rrdc][1]);
+                            rrdc++;
+                        }
+                    }
+                }else{
+                    //左
+                    for(int j=pipe_strpos[i-1] + 1;j<elc;j++){
+                        if(argv[j] == NULL)continue;
+                        if(strcmp(argv[j],"<") == 0){
+                            free(argv[j]);
+                            argv[j] = NULL;
+                            int pos = j;
+                            FILE *readfile = fopen(argv[pos + 1],"r");
+                            
+                            int cs = 0;
+                            int readlen = DEFAULT_MAXREADBUF;
+                            char *readbuf = (char*)malloc(sizeof(char) * readlen);
+                            while(1){
+                                char c = fgetc(readfile);
+                                if(c == EOF)break;
+                                readbuf[cs++] = c;
+                                if(cs > readlen){
+                                    readlen += DEFAULT_MAXREADBUF;
+                                    readbuf = realloc(readbuf,readlen);
+                                }
+                            }
+
+                            write(left_redpipe[lrdc][1],readbuf,cs);
+                            free(readbuf);
+                            fclose(readfile);
+
+                            close(left_redpipe[lrdc][0]);
+                            close(left_redpipe[lrdc][1]);
+                            lrdc++;
+                        }
+                    }
+
+                    //右
+                    for(int j=pipe_strpos[i-1] + 1;j<elc;j++){
+                        if(argv[j] == NULL)continue;
+                        if(strcmp(argv[j],">") == 0){
+                            free(argv[j]);
+                            argv[j] = NULL;
+                            int pos = j;
+                            FILE *writefile = fopen(argv[pos + 1],"w");
+
+                            int writelen = DEFAULT_MAXWRITEBUF;
+                            char *writebuf = (char*)malloc(sizeof(char) * writelen);
+                            while(1){
+                                int res = read(right_redpipe[rrdc][0],writebuf,writelen);
+                                if(!(res < writelen)){
+                                    writelen += DEFAULT_MAXWRITEBUF;
+                                    writebuf = realloc(writebuf,writelen);
+                                }else{
+                                    break;
+                                }
+                            }
+
+                            fputs(writebuf,writefile);
+                            free(writebuf);
+                            fclose(writefile);
+                            
+
+                            close(left_redpipe[rrdc][0]);
+                            close(left_redpipe[rrdc][1]);
+                            rrdc++;
+                        }
+                    }
+                }
             }
         }
 
