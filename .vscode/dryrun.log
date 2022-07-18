@@ -1,7 +1,11 @@
 make --dry-run --keep-going --print-directory
 make: Entering directory '/home/yuuki/programs/C/agchan_shell'
+gcc -c main.c
+gcc -c ui.c
+gcc -c calling.c
+gcc -c piping.c
 gcc -c builtin_commands.c
-gcc -Wall -O2 -o run main.o ui.o calling.o piping.o builtin_commands.o
+gcc -Wall -O2 -o agsh main.o ui.o calling.o piping.o builtin_commands.o
 rm *.o
 make: Leaving directory '/home/yuuki/programs/C/agchan_shell'
  

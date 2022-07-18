@@ -1,5 +1,5 @@
 main:main.o ui.o calling.o piping.o builtin_commands.o
-	gcc -Wall -O2 -o run main.o ui.o calling.o piping.o builtin_commands.o
+	gcc -Wall -O2 -o agsh main.o ui.o calling.o piping.o builtin_commands.o
 	rm *.o
 main.o:main.c
 	gcc -c main.c

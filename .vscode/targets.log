@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jul 18 17:42:56 2022
+# Make data base, printed on Mon Jul 18 18:36:28 2022
 
 # Variables
 
@@ -149,9 +149,9 @@ WSL_DISTRO_NAME = Ubuntu-22.04
 
 # Directories
 
-# . (device 2064, inode 1634): 20 files, no impossibilities.
+# . (device 2064, inode 1634): 17 files, no impossibilities.
 
-# 20 files, no impossibilities in 1 directories.
+# 17 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -168,7 +168,7 @@ calling.c:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-18 17:42:51.709574871
+#  Last modified 2022-07-18 18:36:25.499622278
 #  File has been updated.
 #  Successfully updated.
 
@@ -236,7 +236,7 @@ main: main.o ui.o calling.o piping.o builtin_commands.o
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 2):
-	gcc -Wall -O2 -o run main.o ui.o calling.o piping.o builtin_commands.o
+	gcc -Wall -O2 -o agsh main.o ui.o calling.o piping.o builtin_commands.o
 	rm *.o
 
 main.o: main.c
@@ -267,12 +267,12 @@ calling.o: calling.c
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 28 / storage = 252 B / avg = 9 B
-# current buf: size = 8162 B / used = 252 B / count = 28 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 29 / storage = 256 B / avg = 8 B
+# current buf: size = 8162 B / used = 256 B / count = 29 / avg = 8 B
 
-# strcache performance: lookups = 53 / hit rate = 47%
+# strcache performance: lookups = 50 / hit rate = 42%
 # hash-table stats:
-# Load=28/8192=0%, Rehash=0, Collisions=0/53=0%
-# Finished Make data base on Mon Jul 18 17:42:56 2022
+# Load=29/8192=0%, Rehash=0, Collisions=0/50=0%
+# Finished Make data base on Mon Jul 18 18:36:28 2022
 
  
