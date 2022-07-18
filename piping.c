@@ -244,7 +244,7 @@ int piping(char **argv){
         for(int i=0;i<rrdc;i++)pipe(right_redpipe[i]);
         for(int i=0;i<rrdc_add;i++)pipe(right_redpipe_add[i]);
 
-        int lrd_cc = 0;
+        lrdc = rrdc = rrdc_add = 0;
 
         //コマンドをforkして実行
         for(int i=0;i<pipes + 1;i++){
@@ -266,9 +266,23 @@ int piping(char **argv){
                 //リダイレクトがあれば親とパイプをつなぐ
                 //左
                 if(i == 0){
-                    for(int i=0;argv[i] != NULL;i++){
-                        if(strcmp(argv[i],"<") == 0){
-
+                    for(int j=0;argv[j] != NULL;j++){
+                        if(strcmp(argv[j],"<") == 0){
+                            fprintf(stderr,"dup pipe\n");
+                            dup2(left_redpipe[lrdc][0],0);
+                            close(left_redpipe[lrdc][0]);
+                            close(left_redpipe[lrdc][1]);
+                            lrdc++;
+                        }
+                    }
+                }else{
+                    for(int j=0;argv[j + pipe_strpos[i-1]] != NULL;j++){
+                        if(strcmp(argv[j],"<") == 0){
+                            fprintf(stderr,"dup pipe\n");
+                            dup2(left_redpipe[lrdc][0],0);
+                            close(left_redpipe[lrdc][0]);
+                            close(left_redpipe[lrdc][1]);
+                            lrdc++;
                         }
                     }
                 }
