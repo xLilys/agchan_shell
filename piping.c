@@ -14,6 +14,14 @@ int piping(char **argv){
     unsigned int *pipe_strpos = (unsigned int*)malloc(pc * sizeof(unsigned int));
     for(int i=0;argv[i] != NULL;i++){
         if(strcmp(argv[i],"|") == 0){
+            if(argv[i+1] == NULL){
+                fprintf(stderr,"Expected a string, but found end of the statement\n");
+                for(int i=0;i<elc;i++)fprintf(stderr,"%s ",argv[i]);
+                fprintf(stderr,"\n");
+                for(int i=0;i<elc;i++)for(int j=0;argv[j] != NULL;j++)fprintf(stderr," ");
+                fprintf(stderr,"^");
+                return -1;
+            }
             free(argv[i]);//NULLで上書き前にfree
             argv[i] = NULL;
             if(pipes > pc){
@@ -34,6 +42,11 @@ int piping(char **argv){
         if(strcmp(argv[i],"<") == 0){
             if(argv[i+1] == NULL){
                 fprintf(stderr,"Expected a string, but found end of the statement\n");
+                for(int i=0;i<elc;i++)fprintf(stderr,"%s ",argv[i]);
+                fprintf(stderr,"\n");
+                for(int i=0;i<elc;i++)for(int j=0;argv[j] != NULL;j++)fprintf(stderr," ");
+                fprintf(stderr,"^");
+                return -1;
             }
             if(lrdc > lredpipes_count){
                 lredpipes_count += DEFAULT_MAXREDIRECTS;
@@ -53,6 +66,11 @@ int piping(char **argv){
         if(strcmp(argv[i],">") == 0){
             if(argv[i+1] == NULL){
                 fprintf(stderr,"Expected a string, but found end of the statement\n");
+                for(int i=0;i<elc;i++)fprintf(stderr,"%s ",argv[i]);
+                fprintf(stderr,"\n");
+                for(int i=0;i<elc;i++)for(int j=0;argv[j] != NULL;j++)fprintf(stderr," ");
+                fprintf(stderr,"^");
+                return -1;
             }
             if(rrdc > rredpipes_count){
                 rredpipes_count += DEFAULT_MAXREDIRECTS;
