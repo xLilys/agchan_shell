@@ -279,6 +279,7 @@ int piping(char **argv){
                 if(i == 0){
                     //左
                     for(int j=0;argv[j] != NULL;j++){
+                        if(argv[j] == NULL)continue;
                         if(strcmp(argv[j],"<") == 0){
                             free(argv[j]);
                             argv[j] = NULL;
@@ -291,6 +292,7 @@ int piping(char **argv){
 
                     //右
                     for(int j=0;argv[j] != NULL;j++){
+                        if(argv[j] == NULL)continue;
                         if(strcmp(argv[j],">") == 0){
                             free(argv[j]);
                             argv[j] = NULL;
@@ -378,12 +380,11 @@ int piping(char **argv){
                     close(pipe_ins[i-1][0]);
                     close(pipe_ins[i-1][1]);
                 }
-                
-                
                 //リダイレクト用のパイプ
                 if(i == 0){
                     //左
                     for(int j=0;argv[j] != NULL;j++){
+                        if(argv[j] == NULL)continue;
                         if(strcmp(argv[j],"<") == 0){
                             free(argv[j]);
                             argv[j] = NULL;
@@ -415,6 +416,7 @@ int piping(char **argv){
 
                     //右
                     for(int j=0;argv[j] != NULL;j++){
+                        if(argv[j] == NULL)continue;
                         if(strcmp(argv[j],">") == 0){
                             free(argv[j]);
                             argv[j] = NULL;
@@ -440,9 +442,8 @@ int piping(char **argv){
                             free(writebuf);
                             fclose(writefile);
                             
-
-                            close(left_redpipe[rrdc][0]);
-                            close(left_redpipe[rrdc][1]);
+                            close(right_redpipe[rrdc][0]);
+                            close(right_redpipe[rrdc][1]);
                             rrdc++;
                         }
                     }
@@ -490,26 +491,27 @@ int piping(char **argv){
 
                             int writelen = DEFAULT_MAXWRITEBUF;
                             char *writebuf = (char*)malloc(sizeof(char) * writelen);
-                            for(int i=0;i<writelen;i++)writebuf[i] = 0;
+                            for(int k=0;k<writelen;k++)writebuf[k] = 0;
 
                             while(1){
                                 int res = read(right_redpipe[rrdc][0],writebuf,writelen);
                                 if(!(res < writelen)){
                                     writelen += DEFAULT_MAXWRITEBUF;
                                     writebuf = realloc(writebuf,writelen);
-                                    for(int i=writelen - DEFAULT_MAXWRITEBUF;i<writelen;i++)writebuf[i] = '\0';
+                                    for(int k=writelen - DEFAULT_MAXWRITEBUF;k<writelen;k++)writebuf[k] = '\0';
                                 }else{
                                     break;
                                 }
                             }
+                            
 
                             fputs(writebuf,writefile);
                             free(writebuf);
                             fclose(writefile);
 
+                            close(right_redpipe[rrdc][0]);
+                            close(right_redpipe[rrdc][1]);
 
-                            close(left_redpipe[rrdc][0]);
-                            close(left_redpipe[rrdc][1]);
                             rrdc++;
                         }
                     }
