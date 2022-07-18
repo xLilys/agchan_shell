@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 
 //my headers
 #include "ui.h"
@@ -9,7 +10,7 @@
 #include "calling.h"
 #include "builtin_commands.h"
 #include "login_AA.h"
-
+#include "signal_handle.h"
 
 
 int main(int argc,int *argv[]){

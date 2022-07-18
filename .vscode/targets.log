@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jul 18 18:36:28 2022
+# Make data base, printed on Mon Jul 18 20:07:46 2022
 
 # Variables
 
@@ -149,9 +149,9 @@ WSL_DISTRO_NAME = Ubuntu-22.04
 
 # Directories
 
-# . (device 2064, inode 1634): 17 files, no impossibilities.
+# . (device 2064, inode 1634): 20 files, no impossibilities.
 
-# 17 files, no impossibilities in 1 directories.
+# 20 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -168,7 +168,7 @@ calling.c:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-18 18:36:25.499622278
+#  Last modified 2022-07-18 20:07:41.81970306
 #  File has been updated.
 #  Successfully updated.
 
@@ -183,8 +183,15 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 15):
+#  recipe to execute (from 'Makefile', line 17):
 	rm *.o
+
+signal_handle.o: signal_handle.c
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 15):
+	gcc -c signal_handle.c
 
 # Not a target:
 builtin_commands.c:
@@ -231,13 +238,19 @@ main.c:
 #  Modification time never checked.
 #  File has not been updated.
 
-main: main.o ui.o calling.o piping.o builtin_commands.o
+main: main.o ui.o calling.o piping.o builtin_commands.o signal_handle.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 2):
-	gcc -Wall -O2 -o agsh main.o ui.o calling.o piping.o builtin_commands.o
+	gcc -Wall -O2 -o agsh main.o ui.o calling.o piping.o builtin_commands.o signal_handle.o
 	rm *.o
+
+# Not a target:
+signal_handle.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 main.o: main.c
 #  Implicit rule search has not been done.
@@ -260,19 +273,20 @@ calling.o: calling.c
 	gcc -c calling.c
 
 # files hash-table stats:
-# Load=16/1024=2%, Rehash=0, Collisions=0/41=0%
+# Load=18/1024=2%, Rehash=0, Collisions=0/46=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 29 / storage = 256 B / avg = 8 B
-# current buf: size = 8162 B / used = 256 B / count = 29 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 33 / storage = 316 B / avg = 9 B
+# current buf: size = 8162 B / used = 316 B / count = 33 / avg = 9 B
 
-# strcache performance: lookups = 50 / hit rate = 42%
+# strcache performance: lookups = 57 / hit rate = 42%
 # hash-table stats:
-# Load=29/8192=0%, Rehash=0, Collisions=0/50=0%
-# Finished Make data base on Mon Jul 18 18:36:28 2022
+ 
+# Load=33/8192=0%, Rehash=0, Collisions=0/57=0%
+# Finished Make data base on Mon Jul 18 20:07:46 2022
 
  
