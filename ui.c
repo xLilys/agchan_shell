@@ -92,7 +92,7 @@ char **parse_command(char *command){
 			ip = 0;
 			break;
 		}else if(c == ' '){
-			fprintf(stderr,"ip:%d\n",ip);
+			if(ip == 0)continue;
 			ip = 0;
 			elements[ep++] = element;
 			element = (char*)malloc(INPUT_BUFSIZE);
