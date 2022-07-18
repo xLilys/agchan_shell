@@ -181,11 +181,16 @@ int piping(char **argv){
 
                 int writelen = DEFAULT_MAXWRITEBUF;
                 char *writebuf = (char*)malloc(sizeof(char) * writelen);
+                for(int i=0;i<writelen;i++){
+                    writebuf[i] = '\0';
+                }
+
                 while(1){
                     int res = read(rwpipes[1][0],writebuf,writelen);
                     if(!(res < writelen)){
                         writelen += DEFAULT_MAXWRITEBUF;
                         writebuf = realloc(writebuf,writelen);
+                        for(int i=writelen - DEFAULT_MAXWRITEBUF;i<writelen;i++)writebuf[i] = '\0';
                     }else{
                         break;
                     }
@@ -203,11 +208,15 @@ int piping(char **argv){
 
                 int writelen = DEFAULT_MAXWRITEBUF;
                 char *writebuf = (char*)malloc(sizeof(char) * writelen);
+                for(int i=0;i<writelen;i++){
+                    writebuf[i] = '\0';
+                }
                 while(1){
                     int res = read(rwpipes[2][0],writebuf,writelen);
                     if(!(res < writelen)){
                         writelen += DEFAULT_MAXWRITEBUF;
                         writebuf = realloc(writebuf,writelen);
+                        for(int i=writelen - DEFAULT_MAXWRITEBUF;i<writelen;i++)writebuf[i] = '\0';
                     }else{
                         break;
                     }
@@ -411,11 +420,15 @@ int piping(char **argv){
 
                             int writelen = DEFAULT_MAXWRITEBUF;
                             char *writebuf = (char*)malloc(sizeof(char) * writelen);
+                            for(int i=0;i<writelen;i++)writebuf[i] = 0;
+
                             while(1){
                                 int res = read(right_redpipe[rrdc][0],writebuf,writelen);
                                 if(!(res < writelen)){
                                     writelen += DEFAULT_MAXWRITEBUF;
                                     writebuf = realloc(writebuf,writelen);
+                                    
+                                    for(int i=writelen - DEFAULT_MAXWRITEBUF;i<writelen;i++)writebuf[i] = '\0';
                                 }else{
                                     break;
                                 }
@@ -474,11 +487,14 @@ int piping(char **argv){
 
                             int writelen = DEFAULT_MAXWRITEBUF;
                             char *writebuf = (char*)malloc(sizeof(char) * writelen);
+                            for(int i=0;i<writelen;i++)writebuf[i] = 0;
+
                             while(1){
                                 int res = read(right_redpipe[rrdc][0],writebuf,writelen);
                                 if(!(res < writelen)){
                                     writelen += DEFAULT_MAXWRITEBUF;
                                     writebuf = realloc(writebuf,writelen);
+                                    for(int i=writelen - DEFAULT_MAXWRITEBUF;i<writelen;i++)writebuf[i] = '\0';
                                 }else{
                                     break;
                                 }
