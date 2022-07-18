@@ -1,6 +1,7 @@
 {
     "makefile.extensionOutputFolder": "./.vscode",
     "files.associations": {
-        "piping.h": "c"
+        "piping.h": "c",
+        "signal_handle.h": "c"
     }
 }

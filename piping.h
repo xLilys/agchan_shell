@@ -12,5 +12,6 @@
 #define DEFAULT_MAXWRITEBUF 256
 
 int piping(char **argv);
+void child_killer(int a);
 
 #endif

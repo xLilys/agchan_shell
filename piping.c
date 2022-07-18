@@ -1,6 +1,10 @@
 #include "piping.h"
 #include "calling.h"
+#include "signal_handle.h"
 
+
+int pidc = 0;
+pid_t *child_pids;
 
 int piping(char **argv){
     //リダイレクトする箇所を予めパイプで繋ぐ　リダイレクト元あるいは先がファイルとして存在しているかを確認し、存在すればforkしてパイプをつなぐ
@@ -99,8 +103,7 @@ int piping(char **argv){
 
 
     //pidを格納
-    int pidc = 0;
-    pid_t *child_pids = (pid_t*)malloc((pipes + 1) * sizeof(pid_t));
+    child_pids = (pid_t*)malloc((pipes + 1) * sizeof(pid_t)),pidc = 0;
 
 
     if(pipes == 0){
@@ -503,7 +506,7 @@ int piping(char **argv){
                             fputs(writebuf,writefile);
                             free(writebuf);
                             fclose(writefile);
-                            
+
 
                             close(left_redpipe[rrdc][0]);
                             close(left_redpipe[rrdc][1]);
@@ -531,3 +534,11 @@ int piping(char **argv){
     return 0;
 }
 
+void child_killer(int a){
+    if(a == SIGINT){
+        for(int i=0;i<pidc;i++){
+            if(&child_pids[i] == NULL)continue;
+            kill(child_pids[i],a);
+        }
+    }
+}
