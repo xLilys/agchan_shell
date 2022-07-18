@@ -13,7 +13,7 @@
 
 int main(int argc,int *argv[]){
 	//ログインメッセージ
-	printf("%s%s\n",loginAA,"Welcome agsh! made by @Agchan_Luice twitter → https://twitter.com/Agchan_Luice\ngithub repository → https://github.com/xLilys/agchan_shell");
+	fprintf(stderr,"%s%s\n",loginAA,"Welcome agsh! made by @Agchan_Luice twitter → https://twitter.com/Agchan_Luice\ngithub repository → https://github.com/xLilys/agchan_shell");
 
 	trap_signal(SIGINT,child_killer);
 

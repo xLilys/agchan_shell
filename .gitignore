@@ -1,4 +1,4 @@
 *.o
 .vscode
-run
+agsh
 test
