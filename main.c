@@ -7,6 +7,7 @@
 #include "ui.h"
 #include "piping.h"
 #include "calling.h"
+#include "bic.h"
 
 int main(int argc,int *argv[]){
 
