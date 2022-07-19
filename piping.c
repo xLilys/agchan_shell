@@ -157,6 +157,11 @@ int piping(char **argv){
             if(lrdc>0){
                 int pos = leftred_pos[0];
                 FILE *readfile = fopen(argv[pos + 1],"r");
+
+                if(readfile == NULL){
+                    fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
+                    exit(1);
+                }
                 
                 int cs = 0;
                 int readlen = DEFAULT_MAXREADBUF;
@@ -181,6 +186,11 @@ int piping(char **argv){
             if(rrdc > 0){
                 int pos = rightred_pos[0];
                 FILE *writefile = fopen(argv[pos + 1],"w");
+
+                if(writefile == NULL){
+                    fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
+                    exit(1);
+                }
 
                 int writelen = DEFAULT_MAXWRITEBUF;
                 char *writebuf = (char*)malloc(sizeof(char) * writelen);
@@ -208,6 +218,11 @@ int piping(char **argv){
             if(rrdc_add > 0){
                 int pos = rightred_pos_add[0];
                 FILE *writefile = fopen(argv[pos + 1],"a");
+
+                if(writefile == NULL){
+                    fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
+                    exit(1);
+                }
 
                 int writelen = DEFAULT_MAXWRITEBUF;
                 char *writebuf = (char*)malloc(sizeof(char) * writelen);
@@ -392,6 +407,11 @@ int piping(char **argv){
                             argv[j] = NULL;
                             int pos = j;
                             FILE *readfile = fopen(argv[pos + 1],"r");
+
+                            if(readfile == NULL){
+                                fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
+                                exit(1);
+                            }
                             
                             int cs = 0;
                             int readlen = DEFAULT_MAXREADBUF;
@@ -424,6 +444,11 @@ int piping(char **argv){
                             argv[j] = NULL;
                             int pos = j;
                             FILE *writefile = fopen(argv[pos + 1],"w");
+
+                            if(writefile == NULL){
+                                fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
+                                exit(1);
+                            }
 
                             int writelen = DEFAULT_MAXWRITEBUF;
                             char *writebuf = (char*)malloc(sizeof(char) * writelen);
@@ -458,6 +483,11 @@ int piping(char **argv){
                             argv[j] = NULL;
                             int pos = j;
                             FILE *readfile = fopen(argv[pos + 1],"r");
+
+                            if(readfile == NULL){
+                                fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
+                                exit(1);
+                            }
                             
                             int cs = 0;
                             int readlen = DEFAULT_MAXREADBUF;
@@ -490,6 +520,11 @@ int piping(char **argv){
                             argv[j] = NULL;
                             int pos = j;
                             FILE *writefile = fopen(argv[pos + 1],"w");
+
+                            if(writefile == NULL){
+                                fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
+                                exit(1);
+                            }
 
                             int writelen = DEFAULT_MAXWRITEBUF;
                             char *writebuf = (char*)malloc(sizeof(char) * writelen);
