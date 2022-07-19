@@ -153,7 +153,8 @@ int piping(char **argv){
             }
 
             execvp(argv[0],argv);
-            exit(0);
+            perror(argv[0]);
+            exit(99);
         }else{
             //親
             if(lrdc>0){
