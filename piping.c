@@ -523,7 +523,8 @@ int piping(char **argv){
 
         //待つ
         for(int i=0;i<pidc;i++){
-            waitchild(child_pids[i]);
+            int status;
+            waitchild(child_pids[i],&status);
         }
 
 

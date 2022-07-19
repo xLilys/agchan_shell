@@ -8,6 +8,6 @@
 #include <sys/wait.h>
 
 pid_t call(char **argv);
-int waitchild(pid_t pid);
+int waitchild(pid_t pid,int *status);
 
 #endif

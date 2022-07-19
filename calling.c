@@ -19,12 +19,11 @@ pid_t call(char **argv){
 }
 
 
-int waitchild(pid_t pid){
+int waitchild(pid_t pid,int *status){
         //親プロセス
-        int status;
-        waitpid(pid,&status,0);//wait
-        if(WIFEXITED(status)){
-        }else if(WIFSIGNALED(status)){
+        waitpid(pid,status,0);//wait
+        if(WIFEXITED(*status)){
+        }else if(WIFSIGNALED(*status)){
                 return 1;
         }else{
                 fprintf(stderr,"abnormal exit\n");
