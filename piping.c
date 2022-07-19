@@ -571,7 +571,13 @@ int piping(char **argv){
         free(pipe_strpos);
         for(int i=0;i<pipes;i++)free(pipe_ins[i]);
         free(pipe_ins);
+
+        for(int i=0;i<lrdc;i++)free(left_redpipe[i]);
+        for(int i=0;i<rrdc;i++)free(right_redpipe[i]);
+        for(int i=0;i<rrdc_add;i++)free(right_redpipe_add[i]);
+
     }
+
 
     free(rightred_pos);
     free(leftred_pos);
