@@ -367,11 +367,13 @@ int piping(char **argv){
                 if(i == 0){
                     //初回は普通に実行
                     execvp(argv[0],argv);
-                    exit(0);
+                    perror(argv[0]);
+                    exit(99);
                 }else{
                     int pos = pipe_strpos[i - 1] + 1;
                     execvp(argv[pos],&argv[pos]);
-                    exit(0);
+                    perror(argv[pos]);
+                    exit(99);
                 }
             }else{
                 //親プロセス
