@@ -1,4 +1,4 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/yuuki/programs/C/agchan_shell'
 gcc -c main.c
 gcc -c ui.c
