@@ -2,6 +2,8 @@
 #include "calling.h"
 #include "signal_handle.h"
 
+#include <errno.h>
+
 
 int pidc = 0;
 pid_t *child_pids;
@@ -160,7 +162,7 @@ int piping(char **argv){
 
                 if(readfile == NULL){
                     fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
-                    exit(1);
+                    exit(ENOENT);
                 }
                 
                 int cs = 0;
@@ -189,7 +191,7 @@ int piping(char **argv){
 
                 if(writefile == NULL){
                     fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
-                    exit(1);
+                    exit(ENOENT);
                 }
 
                 int writelen = DEFAULT_MAXWRITEBUF;
@@ -221,7 +223,7 @@ int piping(char **argv){
 
                 if(writefile == NULL){
                     fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
-                    exit(1);
+                    exit(ENOENT);
                 }
 
                 int writelen = DEFAULT_MAXWRITEBUF;
@@ -410,7 +412,7 @@ int piping(char **argv){
 
                             if(readfile == NULL){
                                 fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
-                                exit(1);
+                                exit(ENOENT);
                             }
                             
                             int cs = 0;
@@ -447,7 +449,7 @@ int piping(char **argv){
 
                             if(writefile == NULL){
                                 fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
-                                exit(1);
+                                exit(ENOENT);
                             }
 
                             int writelen = DEFAULT_MAXWRITEBUF;
@@ -486,7 +488,7 @@ int piping(char **argv){
 
                             if(readfile == NULL){
                                 fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
-                                exit(1);
+                                exit(ENOENT);
                             }
                             
                             int cs = 0;
@@ -523,7 +525,7 @@ int piping(char **argv){
 
                             if(writefile == NULL){
                                 fprintf(stderr,"cannot open file %s\n",argv[pos + 1]);
-                                exit(1);
+                                exit(ENOENT);
                             }
 
                             int writelen = DEFAULT_MAXWRITEBUF;
