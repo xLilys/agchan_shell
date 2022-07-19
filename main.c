@@ -31,7 +31,7 @@ int main(int argc,int *argv[]){
 		//更新用
 		if(strcmp(elements[0],"update") == 0){
 			char *update_command[] = {"make",NULL};
-			if(waitchild(call(update_command))){
+			if(waitchild(call(update_command),NULL)){
 				fprintf(stderr,"update failed.\n");
 			}else{
 				for(int i=0;i<elc;i++){

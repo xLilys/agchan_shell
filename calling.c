@@ -21,13 +21,25 @@ pid_t call(char **argv){
 
 int waitchild(pid_t pid,int *status){
         //親プロセス
-        waitpid(pid,status,0);//wait
-        if(WIFEXITED(*status)){
-        }else if(WIFSIGNALED(*status)){
-                return 1;
+        if(status != NULL){
+                waitpid(pid,status,0);//wait
+                if(WIFEXITED(*status)){
+                }else if(WIFSIGNALED(*status)){
+                        return 1;
+                }else{
+                        fprintf(stderr,"abnormal exit\n");
+                        return -1;
+                }
         }else{
-                fprintf(stderr,"abnormal exit\n");
-                return -1;
+                int dummy;
+                waitpid(pid,&dummy,0);//wait
+                if(WIFEXITED(dummy)){
+                }else if(WIFSIGNALED(dummy)){
+                        return 1;
+                }else{
+                        fprintf(stderr,"abnormal exit\n");
+                        return -1;
+                }
         }
         return 0;
 }

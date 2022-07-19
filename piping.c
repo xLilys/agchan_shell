@@ -233,7 +233,7 @@ int piping(char **argv){
             }
         }
 
-        waitchild(pid);
+        waitchild(pid,NULL);
 
     }else{
         //必要なパイプの数分パイプを作成
@@ -525,8 +525,10 @@ int piping(char **argv){
         for(int i=0;i<pidc;i++){
             int status;
             waitchild(child_pids[i],&status);
+            if(status > 0){
+                child_killer(SIGINT);
+            }
         }
-
 
         free(pipe_strpos);
         for(int i=0;i<pipes;i++)free(pipe_ins[i]);
@@ -543,7 +545,7 @@ void child_killer(int a){
     if(a == SIGINT){
         for(int i=0;i<pidc;i++){
             if(&child_pids[i] == NULL)continue;
-            kill(child_pids[i],a);
+            else kill(child_pids[i],a);
         }
     }
 }
